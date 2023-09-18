@@ -3,10 +3,18 @@
 
 #include "chunk.h"
 #include "debug.h"
+#include "value.h"
 
 static int simpleInstraction(const char* name, int offcet){
     printf("%s\n", name);
     return offcet +1;
+}
+static int constantInstraction(const char* name, Chunk* chunk, int offcet){
+    uint8_t constant = chunk->code[offcet + 1];
+    printf("%-16s %4d '", name, constant);
+    printValue(chunk->constants.values[constant]);
+    printf("' \n");
+    return offcet +2;
 }
 
 int disassembleInstraction(Chunk *chunk, int offcet){
@@ -18,6 +26,8 @@ int disassembleInstraction(Chunk *chunk, int offcet){
     switch (instruction){
         case OP_RETURN:
             return simpleInstraction("OP_RETURN", offcet);
+        case OP_CONSTANT:
+            return constantInstraction("OP_CONSTANT", chunk, offcet);
         default:
             printf("Unknown opcode %d\n", instruction);
             return offcet +1; 

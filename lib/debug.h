@@ -1,5 +1,5 @@
-#ifndef regel_debug_h
-#define regel_debug_h
+#ifndef rigel_debug_h
+#define rigel_debug_h
 
 #include "chunk.h"
 
