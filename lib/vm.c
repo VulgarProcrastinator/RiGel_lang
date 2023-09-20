@@ -43,6 +43,23 @@ for (;;){
 #undef READ_CONSTANT
 }
 
+static void resetStack(){
+    vm.stackTOP = vm.stack;
+}
+void push(Value value){
+    // remember * to get the value of the pointer
+    *vm.stackTOP = value;
+    // poiner itself
+    vm.stackTOP++;
+}
+
+Value pop(){
+    vm.stackTOP--;
+    return *vm.stackTOP;    
+}
+
+
+
 InterpretResult interpret(Chunk* chunk) {
     vm.chunk = chunk;
     // ip is always pointing to the next extraction that is going to be executed
@@ -50,10 +67,11 @@ InterpretResult interpret(Chunk* chunk) {
    return run();
 }
 
-
 void initVM(){
-
+    resetStack();
 }
+
+
 void freeVM(){
 
 }
