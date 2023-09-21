@@ -20,13 +20,22 @@ int main(int argc, const char* argv[]) {
     writeChunk(&chunk, OP_CONSTANT, 123);
     writeChunk(&chunk, constant, 123);
 
-    int constant2 = addConstant(&chunk, 3.3);
+    constant = addConstant(&chunk, 3.3);
+    writeChunk(&chunk, OP_CONSTANT, 123);
+    writeChunk(&chunk, constant, 123);
+    
+    writeChunk(&chunk, OP_ADD, 123);
+
+    constant = addConstant(&chunk, 6.2);
     writeChunk(&chunk, OP_CONSTANT, 124);
-    writeChunk(&chunk, constant2, 124);
+    writeChunk(&chunk, constant, 124);
+
+    writeChunk(&chunk, OP_MULTIPLY, 124);
+    writeChunk(&chunk, OP_NEGATE, 124);
+
     writeChunk(&chunk, OP_RETURN, 124);
     
     disassembleChunk(&chunk, "test chunk");
-    printf("<><><><><><><><>><>><><><><><><><><><><>\n");
     interpret(&chunk);
     freeVM();
     freeChunk(&chunk);

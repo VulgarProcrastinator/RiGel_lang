@@ -1,9 +1,6 @@
-#include <stdint.h>
 #include <stdio.h>
-
 #include "chunk.h"
 #include "debug.h"
-#include "value.h"
 
 static int simpleInstraction(const char* name, int offset){
     printf("%s\n", name);
@@ -31,10 +28,20 @@ int disassembleInstraction(Chunk *chunk, int offset){
 
     uint8_t instruction = chunk->code[offset];
     switch (instruction){
-        case OP_RETURN:
-            return simpleInstraction("OP_RETURN", offset);
         case OP_CONSTANT:
             return constantInstraction("OP_CONSTANT", chunk, offset);
+        case OP_ADD:
+            return simpleInstraction("OP_ADD", offset);        
+        case OP_SUBTRACT:
+            return simpleInstraction("OP_SUBTRACT", offset);        
+        case OP_MULTIPLY:
+            return simpleInstraction("OP_MULTIPLY", offset);        
+        case OP_DIVIDE:
+            return simpleInstraction("OP_DIVIDE", offset);        
+        case OP_NEGATE:
+            return simpleInstraction("OP_NEGATE", offset);
+        case OP_RETURN:
+            return simpleInstraction("OP_RETURN", offset);
         default:
             printf("Unknown opcode %d\n", instruction);
             return offset +1; 

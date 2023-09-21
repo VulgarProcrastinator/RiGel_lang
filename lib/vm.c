@@ -1,3 +1,4 @@
+#include "chunk.h"
 #include "common.h"
 #include "debug.h"
 #include "value.h"
@@ -9,13 +10,24 @@ VM vm;
 static InterpretResult run(){
 #define READ_BYTE() (*vm.ip++)
 #define READ_CONSTANT() (vm.chunk->constants.values[READ_BYTE()])
-    
+#define BINARY_OP(op)\
+    do{\
+        double b = pop();\
+        double a = pop();\
+        push(a op b);\
+    } while(false)
+// [3] -> [3][1] -> ?3-1? -> b = 1 -> [3][pop] -> a = 3 -> [pop] -> a-b 
 
 for (;;){
     
 #ifdef DEBUG_TRACE_EXECUTION
     
-    
+    for (Value* slot = vm.stack; slot < vm.stackTOP; slot++ ){
+        printf("[");
+        printValue(*slot);
+        printf("]");
+    }
+    printf("/n");   
     disassembleInstraction(vm.chunk, (int)(vm.ip - vm.chunk->code));
     //printf(" %d, %d \n", vm.ip, vm.chunk->code);
     // (vm.ip -vm.chunk->code) the returning value will be the offset
@@ -31,9 +43,29 @@ for (;;){
             Value constant = READ_CONSTANT();
             printValue(constant);
             printf("\n");
+            push(constant);
             break;
         }
+        case OP_NEGATE:{
+            // implement it without pop?
+            push(-pop()); break;
+        }
+        case OP_ADD:{
+            BINARY_OP(+); break;
+        }
+        case OP_SUBTRACT:{
+            BINARY_OP(-); break;
+        }
+        case OP_MULTIPLY:{
+            BINARY_OP(*); break;
+        }
+        case OP_DIVIDE:{
+            BINARY_OP(/); break;
+        }
+
         case OP_RETURN:{
+            printValue(pop());
+            printf(" poped \n");
             return INTERPRET_OK;
         }
     
@@ -41,6 +73,7 @@ for (;;){
 }
 #undef READ_BYTE
 #undef READ_CONSTANT
+#undef BINARY_OP
 }
 
 static void resetStack(){
@@ -64,7 +97,8 @@ InterpretResult interpret(Chunk* chunk) {
     vm.chunk = chunk;
     // ip is always pointing to the next extraction that is going to be executed
     vm.ip = vm.chunk->code;
-   return run();
+    printf("<><><><><><><><>><>><><><><><><><><><><>\n");
+    return run();
 }
 
 void initVM(){
