@@ -1,6 +1,7 @@
 #include "chunk.h"
 #include "common.h"
 #include "debug.h"
+#include "compiler.h"
 #include "value.h"
 #include "vm.h"
 #include <stdio.h>
@@ -93,12 +94,9 @@ Value pop(){
 
 
 
-InterpretResult interpret(Chunk* chunk) {
-    vm.chunk = chunk;
-    // ip is always pointing to the next extraction that is going to be executed
-    vm.ip = vm.chunk->code;
-    printf("<><><><><><><><>><>><><><><><><><><><><>\n");
-    return run();
+InterpretResult interpret(const char* source) {
+    compile(source);
+    return INTERPRET_OK;
 }
 
 void initVM(){
