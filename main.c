@@ -18,19 +18,25 @@ static void repl(){
         
         interpret(line);
     }
-
 }
+
 static char* readFile(const char* path){
     FILE* file = fopen(path, "rb");
+
     if (file == NULL){
         fprintf(stderr, "Could not open a file \"%s\". \n", path);
         exit(74);
     } 
 
-
+    char* extension = strrchr(path, '.');
+    if (!(extension != NULL && strcmp(extension, ".rig") == 0)){
+        printf("Files should end with .rig \n");
+        exit(1);
+    }
+    
     fseek(file, 0L, SEEK_END);   
     size_t fileSize = ftell(file); // how many bites we are from the start
-    rewind(file);// go the the vary start
+    rewind(file);// go the vary start
     
     char* buffer = (char*)malloc(fileSize +1); 
     if (buffer == NULL){
@@ -38,7 +44,7 @@ static char* readFile(const char* path){
         exit(74);
     }
     size_t bytesRead = fread(buffer, sizeof(char),fileSize, file);
-    if (buffer == NULL){
+    if (bytesRead < fileSize){
         fprintf(stderr, "Could not read a file \"%s\". \n", path);
         exit(74);
     }
@@ -62,7 +68,6 @@ int main(int argc, const char* argv[]) {
     // try having vm as global variable
     //VM vm;  
     //vm.ip = NULL;
-    
     if (argc ==1){
         repl();
     }else if(argc ==2){
@@ -71,6 +76,7 @@ int main(int argc, const char* argv[]) {
         fprintf(stderr, "Usage: RiGel [path]\n");
         exit(64);
     }
+    
 
     freeVM();
     return 0;

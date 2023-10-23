@@ -12,7 +12,7 @@ typedef struct {
     uint8_t* ip;
     Value stack[STACK_MAX];
     // always points past the last item, like it is pointing to whare the next item is going to be
-    Value* stackTOP;
+    Value* stackTOP;// where the next value is going to be
 } VM;
 
 typedef enum {

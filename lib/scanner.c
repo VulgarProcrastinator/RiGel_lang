@@ -137,7 +137,7 @@ static TokenType checkKeyword(int start, int length,
     return TOKEN_IDENTIFIER;
 }
 
-static TokenType indentifierType(){
+static TokenType identifierType(){
     switch (scanner.start[0]) {
 
         case 'a': return checkKeyword(1, 2, "nd", TOKEN_AND); 
@@ -175,10 +175,11 @@ static TokenType indentifierType(){
     return TOKEN_IDENTIFIER;
 }
 
+
 static Token indetifier(){
     while (isAlpha(peek()) || isDigit(peek())){ advance();}  
  
-    return makeToken(indentifierType());
+    return makeToken(identifierType());
 }
 
 Token scanToken(){
